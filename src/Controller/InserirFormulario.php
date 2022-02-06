@@ -2,13 +2,15 @@
 
     namespace Alura\Cursos\Controller;
 
-    class InserirFormulario implements InterfaceController
+    class InserirFormulario  extends Router implements InterfaceController
     {
 
         public function processaRequisicao():void
         { 
-            $titulo = 'Novo curso';
-            require __DIR__ . '/../../View/novo-curso.php';
+
+            echo $this->route('novo-curso.php', [
+                'titulo' => 'Novo curso'
+            ]);
         }
 
     }
