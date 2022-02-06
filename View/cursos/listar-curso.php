@@ -1,4 +1,4 @@
-<?php include __DIR__ . '/../View/layout/inicio.php'; ?>
+<?php include __DIR__ . '/../../View/layout/inicio.php'; ?>
 
     <a href="/novo-curso" class="btn btn-primary mb-2">
         Novo Curso
@@ -22,4 +22,4 @@
         <?php endforeach; ?>
     </ul>
 
-<?php include __DIR__ . '/../View/layout/fim.php'; ?>
+<?php include __DIR__ . '/../../View/layout/fim.php'; ?>

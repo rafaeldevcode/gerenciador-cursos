@@ -19,7 +19,7 @@
         public function processaRequisicao():void
         {
 
-            echo $this->route('listar-curso.php', [
+            echo $this->route('cursos/listar-curso.php', [
                 'cursos' => $this->repositorioDeCursos->findAll(),
                 'titulo' => 'Listar cursos'
             ]);

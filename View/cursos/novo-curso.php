@@ -1,4 +1,4 @@
-<?php include __DIR__ . '/../View/layout/inicio.php'; ?>
+<?php include __DIR__ . '/../../View/layout/inicio.php'; ?>
 
     <form action="/salvar-curso<?= isset($curso) ? '?id=' . $curso->getId() : '';?> " method="POST" class="form-group">
         <div>
@@ -11,4 +11,4 @@
         </button>
     </form>
 
-<?php include __DIR__ . '/../View/layout/fim.php'; ?>
+<?php include __DIR__ . '/../../View/layout/fim.php'; ?>

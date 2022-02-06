@@ -8,7 +8,7 @@
         public function processaRequisicao():void
         { 
 
-            echo $this->route('novo-curso.php', [
+            echo $this->route('cursos/novo-curso.php', [
                 'titulo' => 'Novo curso'
             ]);
         }

@@ -26,7 +26,7 @@
             }
             $curso = $this->repositorioCurso->find($id);
 
-            echo $this->route('novo-curso.php', [
+            echo $this->route('cursos/novo-curso.php', [
                 'curso'  => $curso,
                 'titulo' => "Editar curso {$curso->getDescricao()}"
             ]);
