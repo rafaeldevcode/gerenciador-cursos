@@ -4,6 +4,7 @@
 
     use Alura\Cursos\Entity\Curso;
     use Alura\Cursos\Infra\EntityManagerCreator;
+    use Alura\Cursos\Services\Router;
 
     class Persistencia extends Router implements InterfaceController
     {
@@ -25,12 +26,16 @@
             if((!is_null($id)) && ($id !== false)){
                 $curso->setId($id);
                 $this->entityManager->merge($curso);
+
+                Router::session('success', 'Curso editado com sucesso!');
             }else{
                 $this->entityManager->persist($curso);
+
+                Router::session('success', 'Curso adicionado com sucesso!');
             }
             $this->entityManager->flush();
 
-            $this->redirect('/listar-cursos');
+            Router::redirect('/listar-cursos');
 
         }
 

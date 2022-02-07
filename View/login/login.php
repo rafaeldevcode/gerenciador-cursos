@@ -7,7 +7,7 @@
         </div>
 
         <div class="form-group">
-            <label for="senha">E-Mail:</label>
+            <label for="senha">Senha:</label>
             <input type="password" name="senha" id="senha" class="form-control">
         </div>
 

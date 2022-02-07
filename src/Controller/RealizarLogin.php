@@ -4,6 +4,7 @@
 
     use Alura\Cursos\Entity\Usuario;
     use Alura\Cursos\Infra\EntityManagerCreator;
+    use Alura\Cursos\Services\Router;
 
     class RealizarLogin extends Router implements InterfaceController
     {
@@ -22,8 +23,8 @@
             $email =  filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
 
             if((is_null($email)) || ($email === false)){
-                echo "E-mail inválido!";
-                return;
+                Router::session('danger', 'Email inválidos!');
+                Router::redirect('/login');
             }
 
             $senha = filter_input(INPUT_POST, 'senha', FILTER_SANITIZE_STRING);
@@ -32,10 +33,13 @@
             $usuario = $this->repositorioUsuario->findOneBy(['email' => $email]);
 
             if((is_null($usuario)) || (!$usuario->senhaEstaCorreta($senha))){
-                echo "Email e/ou senha inválidos!";
-                return;
+                Router::session('danger', 'Email e/ou senha inválidos!');
+                Router::redirect('/login');
             }
 
-            $this->redirect('/list');
+            session_start();
+            $_SESSION['usuario_logado'] = true;
+
+            Router::redirect('/listar-cursos');
         }
     }

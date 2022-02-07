@@ -4,6 +4,7 @@
 
     use Alura\Cursos\Entity\Curso;
     use Alura\Cursos\Infra\EntityManagerCreator;
+    use Alura\Cursos\Services\Router;
 
     class ListarCursos extends Router implements InterfaceController
     {
@@ -19,7 +20,7 @@
         public function processaRequisicao():void
         {
 
-            echo $this->route('cursos/listar-curso.php', [
+            echo Router::route('cursos/listar-curso.php', [
                 'cursos' => $this->repositorioDeCursos->findAll(),
                 'titulo' => 'Listar cursos'
             ]);
