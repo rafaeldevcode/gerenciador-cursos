@@ -23,8 +23,9 @@
             $email =  filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
 
             if((is_null($email)) || ($email === false)){
-                Router::session('danger', 'Email inválidos!');
+                Router::session('danger', 'Email inválido!');
                 Router::redirect('/login');
+                return;
             }
 
             $senha = filter_input(INPUT_POST, 'senha', FILTER_SANITIZE_STRING);
@@ -35,6 +36,7 @@
             if((is_null($usuario)) || (!$usuario->senhaEstaCorreta($senha))){
                 Router::session('danger', 'Email e/ou senha inválidos!');
                 Router::redirect('/login');
+                return;
             }
 
             session_start();
