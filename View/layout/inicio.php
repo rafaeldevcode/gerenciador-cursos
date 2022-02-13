@@ -21,7 +21,7 @@
     <?php }
 ?>
 
-<div class="container">
+<div class="container my-2">
     <div class="jumbotron">
         <h1><?= $titulo ?></h1>
     </div>

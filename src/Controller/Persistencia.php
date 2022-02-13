@@ -3,23 +3,26 @@
     namespace Alura\Cursos\Controller;
 
     use Alura\Cursos\Entity\Curso;
-    use Alura\Cursos\Infra\EntityManagerCreator;
     use Alura\Cursos\Services\Router;
+    use Doctrine\ORM\EntityManagerInterface;
+    use Nyholm\Psr7\Response;
+    use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
+    use Psr\Http\Server\RequestHandlerInterface;
 
-    class Persistencia extends Router implements InterfaceController
+    class Persistencia extends Router implements RequestHandlerInterface
     {
 
         private $entityManager;
 
-        public function __construct()
+        public function __construct(EntityManagerInterface $entityManager)
         {
-            $this->entityManager = (new EntityManagerCreator())->getEntityManager();
+            $this->entityManager = $entityManager;
         }
 
-        public function processaRequisicao(): void
+        public function handle(ServerRequestInterface $request): ResponseInterface
         {
-            $descricao = filter_input(INPUT_POST, 'descricao', FILTER_SANITIZE_STRING);
-            $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+            $descricao = filter_var($request->getParsedBody()['descricao'], FILTER_SANITIZE_STRING);
+            $id = filter_var($request->getQueryParams()['id'], FILTER_VALIDATE_INT);
             $curso = new Curso();
             $curso->setDescricao($descricao);
 
@@ -35,8 +38,7 @@
             }
             $this->entityManager->flush();
 
-            Router::redirect('/listar-cursos');
-
+            return new Response(302, ['location' => '/listar-cursos']);
         }
 
     }

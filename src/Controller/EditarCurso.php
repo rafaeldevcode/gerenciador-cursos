@@ -3,33 +3,36 @@
     namespace Alura\Cursos\Controller;
 
     use Alura\Cursos\Entity\Curso;
-    use Alura\Cursos\Infra\EntityManagerCreator;
     use Alura\Cursos\Services\Router;
+    use Doctrine\ORM\EntityManagerInterface;
+    use Nyholm\Psr7\Response;
+    use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
+    use Psr\Http\Server\RequestHandlerInterface;
 
-    class EditarCurso extends Router implements InterfaceController
+    class EditarCurso extends Router implements RequestHandlerInterface
     {
 
         private $repositorioCurso;
 
-        public function __construct()
+        public function __construct(EntityManagerInterface $entityManager)
         {
-            $entityManager = (new EntityManagerCreator)->getEntityManager();
             $this->repositorioCurso = $entityManager->getRepository(Curso::class);
         }
 
-        public function processaRequisicao(): void
+        public function handle(ServerRequestInterface $request): ResponseInterface
         {
-            $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+            $id = filter_var($request->getQueryParams()['id'], FILTER_VALIDATE_INT);
 
             if((is_null($id)) || ($id === false)){
-                Router::redirect('/listar-cursos');
-                return;
+                return new Response(302, ['location' => '/listar-cursos']);
             }
             $curso = $this->repositorioCurso->find($id);
 
-            echo Router::route('cursos/novo-curso.php', [
+            $html = Router::route('cursos/novo-curso.php', [
                 'curso'  => $curso,
                 'titulo' => "Editar curso {$curso->getDescricao()}"
             ]);
+
+            return new Response(200, [], $html);
         }
     }

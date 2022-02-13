@@ -3,45 +3,48 @@
     namespace Alura\Cursos\Controller;
 
     use Alura\Cursos\Entity\Usuario;
-    use Alura\Cursos\Infra\EntityManagerCreator;
     use Alura\Cursos\Services\Router;
+    use Doctrine\ORM\EntityManagerInterface;
+    use Nyholm\Psr7\Response;
+    use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
+    use Psr\Http\Server\RequestHandlerInterface;
 
-    class RealizarLogin extends Router implements InterfaceController
+    class RealizarLogin extends Router implements RequestHandlerInterface
     {
 
         private $repositorioUsuario;
 
-        public function __construct()
+        public function __construct(EntityManagerInterface $entityManager)
         {
-            $entityManager = (new EntityManagerCreator())->getEntityManager();
             $this->repositorioUsuario = $entityManager->getRepository(Usuario::class);
         }
 
-        public function processaRequisicao(): void
+        public function handle(ServerRequestInterface $request): ResponseInterface
         {
 
-            $email =  filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
+            $queryStrings = $request->getParsedBody();
+            $email = filter_var($queryStrings['email'], FILTER_VALIDATE_EMAIL);
 
             if((is_null($email)) || ($email === false)){
                 Router::session('danger', 'Email inválido!');
-                Router::redirect('/login');
-                return;
+
+                return new Response(302, ['location' => '/login']);
             }
 
-            $senha = filter_input(INPUT_POST, 'senha', FILTER_SANITIZE_STRING);
+            $senha = filter_var($queryStrings['senha'], FILTER_SANITIZE_STRING);
 
             /** @var Usuario $usuario**/
             $usuario = $this->repositorioUsuario->findOneBy(['email' => $email]);
 
             if((is_null($usuario)) || (!$usuario->senhaEstaCorreta($senha))){
                 Router::session('danger', 'Email e/ou senha inválidos!');
-                Router::redirect('/login');
-                return;
+
+                return new Response(302, ['location' => '/login']);
             }
 
             session_start();
             $_SESSION['usuario_logado'] = true;
 
-            Router::redirect('/listar-cursos');
+            return new Response(302, ['location' => '/listar-cursos']);
         }
     }

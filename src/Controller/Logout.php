@@ -2,15 +2,17 @@
 
     namespace Alura\Cursos\Controller;
 
-    use Alura\Cursos\Controller\InterfaceController;
     use Alura\Cursos\Services\Router;
+    use Nyholm\Psr7\Response;
+    use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
+    use Psr\Http\Server\RequestHandlerInterface;
 
-    class Logout extends Router implements InterfaceController
+    class Logout extends Router implements RequestHandlerInterface
     {
-        public function processaRequisicao(): void
+        public function handle(ServerRequestInterface $request): ResponseInterface
         {
             session_destroy();
 
-            Router::redirect('/login');
+            return new Response(302, ['location' => '/login']);
         }   
     }

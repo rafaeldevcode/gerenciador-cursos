@@ -3,26 +3,29 @@
     namespace Alura\Cursos\Controller;
 
     use Alura\Cursos\Entity\Curso;
-    use Alura\Cursos\Infra\EntityManagerCreator;
     use Alura\Cursos\Services\Router;
+    use Doctrine\ORM\EntityManagerInterface;
+    use Nyholm\Psr7\Response;
+    use Psr\Http\Message\{ResponseInterface, ServerRequestInterface};
+    use Psr\Http\Server\RequestHandlerInterface;
 
-    class RemoverCurso extends Router implements InterfaceController
+    class RemoverCurso extends Router implements RequestHandlerInterface
     {
 
         private $entityManager;
 
-        public function __construct()
+        public function __construct(EntityManagerInterface $entityManager)
         {
-            $this->entityManager = (new EntityManagerCreator())->getEntityManager();
+            $this->entityManager = $entityManager;
         }
 
-        public function processaRequisicao(): void
+        public function handle(ServerRequestInterface $request): ResponseInterface
         {
-            $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
+            $id = filter_var($request->getQueryParams()['id'], FILTER_VALIDATE_INT);
 
             if((is_null($id)) || ($id === false)){
-                Router::redirect('/listar-cursos');
-                return;
+
+                return new Response(302, ['location' => '/listar-cursos']);
             }
 
             $curso = $this->entityManager->getReference(Curso::class, $id);
@@ -31,6 +34,6 @@
 
             Router::session('success', 'Curso removido com sucesso!');
             
-            Router::redirect('/listar-cursos');
+            return new Response(302, ['location' => '/listar-cursos']);
         }
     }

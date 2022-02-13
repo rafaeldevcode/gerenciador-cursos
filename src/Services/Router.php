@@ -14,11 +14,6 @@
             return $html; 
         }
 
-        public function redirect(string $rota):void
-        {
-            header("location: {$rota}", true, 302);
-        }
-
         public function session(string $type_message, string $message):void
         {
             $_SESSION['type_message'] = $type_message;
